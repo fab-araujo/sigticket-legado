@@ -74,21 +74,35 @@ def listar_tickets():
     print(f"Total: {len(tickets)} ticket(s)")
 
 
-def mudar_status(ticket_id, novo_status):
-    """
-    Altera o status de um ticket
-    BUG #1: Aceita qualquer string como status (sem validação!)
-    """
+def mudar_status(minha_lista_de_tickets, valor_para_x):
+    """Altera status com validação."""
+    STATUS_VALIDOS = ["aberto", "em_andamento", "resolvido", "fechado"]
+
+    listar_tickets()
+
+    try:
+        ticket_id = int(input("\nID do ticket:"))
+    except ValueError:
+        print("✗ ID inválido")
+        return
+
+    print("\nStatus válidos:")
+    for s in STATUS_VALIDOS:
+        print(f"- {s}")
+
+    novo_status = input("\nNovo status:").strip().lower()
+
+    if novo_status not in STATUS_VALIDOS:
+        print(f"✗ Status inválido! Use: {','.join(STATUS_VALIDOS)}")
+        return
+
     for t in tickets:
         if t["id"] == ticket_id:
-            # BUG #1: Não valida se o status é válido!
-            # Aceita "xpto", "qualquercoisa", etc.
             t["status"] = novo_status
-            print(f"\n✓ Status do ticket #{ticket_id} alterado para: {novo_status}")
-            return True
-    
-    print(f"\n✗ Ticket #{ticket_id} não encontrado.")
-    return False
+            print(f"✓ Status alterado para: {novo_status}")
+            return
+
+    print("✗ Ticket não encontrado")
 
 
 def buscar_ticket(ticket_id):
