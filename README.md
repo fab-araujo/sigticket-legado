@@ -46,10 +46,8 @@ sigticket/
 - **Bug #2:** Validação de formato de data
 - **Refatoração:** Remoção de senha hardcoded
 ## �� Equipe
-- [Nome Membro 1]
-- [Nome Membro 2]
-- [Nome Membro 3]
-- [Nome Membro 4]
+- [Elias Roberto da Pinto]
+- [João Marcos Pinto da Cruz Moura]
 ## �� Projeto
 Trabalho da disciplina Engenharia de Software II
 Data: Dezembro/2025
