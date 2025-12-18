@@ -1,4 +1,5 @@
 from datetime import datetime
+from config import USUARIOS, STATUS_VALIDOS
 
 """
 SigTicket - Sistema de Gestão de Tickets de Suporte
@@ -11,7 +12,9 @@ ATENÇÃO: Este é um sistema legado com problemas intencionais para fins educac
 SENHA_ADMIN = "admin123"
 usuarios_autorizados = ["admin", "suporte"]
 
+
 # Base de dados em memória
+#Variáveis Universais, deveriam estar dentro do código onde são implementadas.
 tickets = []
 contador_id = 1
 
@@ -120,6 +123,7 @@ def mudar_status():
     """Altera status com validação."""
     STATUS_VALIDOS = ["aberto", "em_andamento", "resolvido", "fechado"]
     
+    # Agora usa STATUS_VALIDOS do config.py
     listar_tickets()
     
     try:
@@ -147,6 +151,7 @@ def mudar_status():
     print("✗ Ticket não encontrado")
 
 
+
 def buscar_ticket(ticket_id):
     """Busca e exibe detalhes de um ticket específico"""
     for t in tickets:
@@ -166,20 +171,17 @@ def buscar_ticket(ticket_id):
     return None
 
 
-def autenticar():
-    """
-    Sistema básico de autenticação
-    PROBLEMA: Senha está hardcoded no início do arquivo!
-    """
-    print("\n--- AUTENTICAÇÃO ---")
+def fazer_login():
+    """Realiza login do usuário."""
+    print("\n=== LOGIN ===")
     usuario = input("Usuário: ")
     senha = input("Senha: ")
     
-    if usuario in usuarios_autorizados and senha == SENHA_ADMIN:
-        print(f"\n✓ Bem-vindo, {usuario}!")
+    if usuario in USUARIOS and USUARIOS[usuario] == senha:
+        print(f"✓ Login realizado: {usuario}")
         return True
     else:
-        print("\n✗ Credenciais inválidas!")
+        print("✗ Usuário ou senha inválidos")
         return False
 
 
@@ -189,7 +191,7 @@ def main():
     print("\n🎫 Bem-vindo ao SigTicket!")
     
     # Autenticação simples
-    if not autenticar():
+    if not fazer_login():
         print("Acesso negado. Encerrando...")
         return
     
