@@ -326,3 +326,4 @@ def main():
 if __name__ == "__main__":
     carregar_dados_teste()
     main()
+    # teste
