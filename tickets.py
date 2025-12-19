@@ -23,6 +23,50 @@ tickets = []
 contador_id = 1
 
 
+def validar_data(data: str) -> bool:
+    """
+    Valida se a string 'data' está no formato DD/MM/AAAA e representa uma data válida,
+    não futura e com ano a partir de 2000.
+    
+    Imprime mensagens de erro específicas e retorna True apenas se válida.
+    """
+    data = data.strip()
+    
+    # Verificações básicas de formato
+    if len(data) != 10:
+        print("✗ Erro: A data deve ter exatamente 10 caracteres (DD/MM/AAAA).")
+        return False
+    
+    if data[2] != '/' or data[5] != '/':
+        print("✗ Erro: A data deve usar '/' como separador (ex: 18/12/2025).")
+        return False
+    
+    try:
+        dia, mes, ano = map(int, data.split('/'))
+    except ValueError:
+        print("✗ Erro: Dia, mês e ano devem ser números.")
+        return False
+    
+    # Validação com datetime
+    try:
+        data_obj = datetime(ano, mes, dia)
+    except ValueError:
+        print("✗ Erro: Data inválida! Verifique dia/mês (ex: 31/04 não existe).")
+        return False
+    
+    # Rejeita datas futuras
+    if data_obj.date() > datetime.now().date():
+        print("✗ Erro: Data não pode ser futura.")
+        return False
+    
+    # Rejeita anos muito antigos
+    if ano < 2000:
+        print("✗ Erro: Ano deve ser 2000 ou posterior.")
+        return False
+    
+    return True
+
+
 def menu_principal():
     """Exibe o menu principal do sistema"""
     print("\n" + "="*50)
