@@ -46,3 +46,4 @@ MAX_TENTATIVAS_DATA = 3
 
 # Ano mínimo aceito para datas (evita datas muito antigas)
 ANO_MINIMO = 2000
+# teste
