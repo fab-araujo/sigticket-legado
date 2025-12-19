@@ -1,0 +1,29 @@
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+# Arquivos de configuração local (NÃO COMMITAR EM PRODUÇÃO!)
+config_local.py
+.env
+# Logs
+*.log
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
