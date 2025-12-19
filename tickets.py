@@ -1,16 +1,22 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-SigTicket - Sistema de Gestão de Tickets de Suporte
-Versão Legado 0.1 (Contém bugs conhecidos)
+SigTicket - Sistema de Gerenciamento de Tickets
+Versão: 1.0.0
+Data: Dezembro/2025
+Descrição:
+Sistema simples para gerenciamento de tickets de suporte.
+Permite criar, listar, buscar e alterar status de tickets com validações completas.
+Autores:
+Ed Hungria
+[Emerson]
+[Paulo]
+[Alex]
+Disciplina: Engenharia de Software II
+"""
 
-ATENÇÃO: Este é um sistema legado com problemas intencionais para fins educacionais.
-"""
 from datetime import datetime
-
 from config import USUARIOS, STATUS_VALIDOS
-
-# Configurações (PROBLEMA: Senha hardcoded!)
-SENHA_ADMIN = "admin123"
-usuarios_autorizados = ["admin", "suporte"]
 
 # Base de dados em memória
 tickets = []
@@ -29,8 +35,19 @@ def menu_principal():
     print("5. Sair")
     print("="*50)
 
+
 def validar_data(data_str):
-    """Valida formato DD/MM/AAAA."""
+    """
+    Valida se uma string representa uma data válida no formato DD/MM/AAAA.
+    
+    Args:
+        data_str (str): String contendo a data a ser validada
+    
+    Returns:
+        tuple: (bool, str) onde:
+            - bool: True se válida, False se inválida
+            - str: Data formatada se válida, mensagem de erro se inválida
+    """
     data_str = data_str.strip()
     if len(data_str) != 10 or data_str[2] != '/' or data_str[5] != '/':
         return False, "Use formato DD/MM/AAAA"
@@ -44,8 +61,12 @@ def validar_data(data_str):
     except ValueError:
         return False, "Data inválida"
 
+
 def criar_ticket():
-    """Cria ticket com validação."""
+    """
+    Cria um novo ticket com validação completa dos campos.
+    Validações: título, descrição, usuário obrigatórios; data válida com até 3 tentativas.
+    """
     print("\n=== CRIAR TICKET ===")
     titulo = input("Título: ").strip()
     if not titulo:
@@ -59,7 +80,8 @@ def criar_ticket():
     if not usuario:
         print("✗ Usuário obrigatório")
         return
-    # Validar data (3 tentativas)
+    
+    # Validação de data com 3 tentativas
     for tentativa in range(3):
         data = input("Data (DD/MM/AAAA): ").strip()
         valida, msg = validar_data(data)
@@ -69,9 +91,9 @@ def criar_ticket():
         else:
             print(f"✗ {msg}")
         if tentativa < 2:
-            print(f" Tentativas restantes: {2-tentativa}")
+            print(f" Tentativas restantes: {2 - tentativa}")
     else:
-        print("✗ Máximo de tentativas. Cancelado.")
+        print("✗ Máximo de tentativas. Operação cancelada.")
         return
     
     novo_ticket = {
@@ -87,7 +109,7 @@ def criar_ticket():
 
 
 def listar_tickets():
-    """Lista todos os tickets cadastrados"""
+    """Lista todos os tickets cadastrados em formato tabular"""
     if not tickets:
         print("\nNenhum ticket cadastrado ainda.")
         return
@@ -104,31 +126,38 @@ def listar_tickets():
 
 
 def mudar_status():
-    """Altera status com validação."""
-    # Agora usa STATUS_VALIDOS do config.py
+    """
+    Altera o status de um ticket existente com validação completa.
+    Exibe lista de status válidos e rejeita entradas inválidas.
+    """
     listar_tickets()
+    
     try:
         ticket_id = int(input("\nID do ticket: "))
     except ValueError:
         print("✗ ID inválido")
         return
+    
     print("\nStatus válidos:")
     for s in STATUS_VALIDOS:
         print(f" - {s}")
+    
     novo_status = input("\nNovo status: ").strip().lower()
     if novo_status not in STATUS_VALIDOS:
         print(f"✗ Status inválido! Use: {', '.join(STATUS_VALIDOS)}")
         return
+    
     for t in tickets:
         if t["id"] == ticket_id:
             t["status"] = novo_status
             print(f"✓ Status alterado para: {novo_status}")
             return
+    
     print("✗ Ticket não encontrado")
 
 
 def buscar_ticket(ticket_id):
-    """Busca e exibe detalhes de um ticket específico"""
+    """Busca e exibe detalhes completos de um ticket específico pelo ID"""
     for t in tickets:
         if t["id"] == ticket_id:
             print("\n" + "="*50)
@@ -147,28 +176,31 @@ def buscar_ticket(ticket_id):
 
 
 def fazer_login():
-    """Realiza login do usuário."""
+    """
+    Realiza autenticação do usuário usando credenciais do config.py.
+    
+    Returns:
+        bool: True se login bem-sucedido, False caso contrário
+    """
     print("\n=== LOGIN ===")
     usuario = input("Usuário: ")
     senha = input("Senha: ")
-    if usuario in USUARIOS and USUARIOS[usuario] == senha:
+    if usuario in USUARIOS and USUARIOS.get(usuario) == senha:
         print(f"✓ Login realizado: {usuario}")
         return True
     else:
         print("✗ Usuário ou senha inválidos")
         return False
 
-# Função principal
+
 def main():
-    """Função principal que executa o sistema"""
+    """Função principal que controla o fluxo de execução do sistema"""
     print("\n🎫 Bem-vindo ao SigTicket!")
     
-    # Autenticação simples
     if not fazer_login():
         print("Acesso negado. Encerrando...")
         return
     
-    # Loop principal do menu
     while True:
         menu_principal()
         
@@ -177,30 +209,19 @@ def main():
             
             if opcao == "1":
                 criar_ticket()
-            
             elif opcao == "2":
                 listar_tickets()
-            
             elif opcao == "3":
-                listar_tickets()
-                try:
-                    tid = int(input("\nID do ticket: "))
-                    novo_status = input("Novo status: ")  # BUG #1: Sem validação!
-                    mudar_status(tid, novo_status)
-                except ValueError:
-                    print("\n✗ ID inválido!")
-            
+                mudar_status()
             elif opcao == "4":
                 try:
                     tid = int(input("\nID do ticket para buscar: "))
                     buscar_ticket(tid)
                 except ValueError:
                     print("\n✗ ID inválido!")
-            
             elif opcao == "5":
                 print("\nEncerrando sistema... Até logo!")
                 break
-            
             else:
                 print("\n✗ Opção inválida!")
         
@@ -211,11 +232,9 @@ def main():
             print(f"\n✗ Erro inesperado: {e}")
 
 
-# Dados de exemplo para teste (opcional - descomentar para usar)
 def carregar_dados_teste():
-    """Carrega alguns tickets de exemplo"""
+    """Carrega tickets de exemplo com problemas intencionais (para testes)"""
     global contador_id
-    
     tickets.extend([
         {
             "id": 1,
@@ -230,25 +249,23 @@ def carregar_dados_teste():
             "titulo": "Senha esquecida",
             "descricao": "Usuário não consegue acessar o sistema",
             "usuario": "maria.santos",
-            "data": "32/13/2025",  # BUG #2: Data inválida!
-            "status": "em analise"  # BUG #1: Status não padronizado!
+            "data": "32/13/2025",
+            "status": "em analise"
         },
         {
             "id": 3,
             "titulo": "Computador lento",
             "descricao": "Máquina travando constantemente",
             "usuario": "pedro.costa",
-            "data": "abc/def/ghij",  # BUG #2: Data completamente inválida!
-            "status": "xpto"  # BUG #1: Status absurdo aceito!
+            "data": "abc/def/ghij",
+            "status": "xpto"
         }
     ])
-    
     contador_id = 4
     print("✓ Dados de teste carregados (3 tickets com problemas)")
 
 
 if __name__ == "__main__":
-    # Descomente a linha abaixo para carregar dados de teste
+    # Descomente para carregar dados de teste
     carregar_dados_teste()
-    
     main()
