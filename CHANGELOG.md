@@ -1,20 +1,41 @@
 # Changelog
 Todas as mudanças notáveis do projeto SigTicket serão documentadas aqui.
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-
-BR/1.0.0/).
+O formato é baseado em Keep a Changelog.
 ---
 ## [1.0.0] - 2025-12-20
+VERSÃO FINAL - ENTREGA DO PROJETO
 ### Adicionado
 - Sistema completo de gerenciamento de tickets
-- Autenticação de usuários
-- Criação de tickets com validação
+- Autenticação de usuários com múltiplos perfis
+- Criação de tickets com validação completa
 - Listagem de todos os tickets
 - Alteração de status com validação
 - Sistema de relatórios
+- Documentação técnica completa (DOCS.md)
+- Comentários explicativos em todo o código
+- Docstrings em todas as funções
+### Melhorado
+- Código completamente documentado
+- Mensagens de erro mais descritivas
+- Validações robustas
+- Organização do código em módulos
+---
+## [0.4.0] - 2025-12-19
+### Adicionado
+- Documentação técnica completa (DOCS.md)
+- Comentários explicativos em todo o código
+- Docstrings detalhadas em todas as funções
+- Cabeçalho com informações do projeto
+- Exemplos de uso em docstrings
+### Melhorado
+- Legibilidade do código
+- Manutenibilidade
+- Documentação inline
 ---
 ## [0.3.0] - 2025-12-18
 ### Adicionado
 - Arquivo CHANGELOG.md para documentar mudanças
+- Code review completo entre grupos
 ### Melhorado
 - Mensagens de erro mais descritivas (code review)
 - Constantes movidas para topo do arquivo
@@ -29,8 +50,10 @@ BR/1.0.0/).
 ### Mudado
 - Credenciais movidas de hardcoded para arquivo de configuração
 - Suporte para múltiplos usuários (admin e suporte)
+- Configurações centralizadas
 ### Segurança
 - Remoção de senhas hardcoded do código principal
+- Avisos de segurança no config.py
 ---
 ## [0.1.1] - 2025-12-16
 ### Corrigido
@@ -38,7 +61,8 @@ BR/1.0.0/).
 - Formato DD/MM/AAAA obrigatório
 - Rejeita datas futuras
 - Rejeita datas inválidas (ex: 32/13/2025)
-- Limita tentativas de entrada
+- Limita tentativas de entrada (3 tentativas) 
+- Valida campos obrigatórios
 - Bug #1: Validação de status de tickets
 - Lista de status válidos implementada
 - Validação antes de alterar status
@@ -48,7 +72,7 @@ BR/1.0.0/).
 ## [0.1.0] - 2025-12-15
 ### Adicionado
 - Auditoria técnica completa do sistema legado
-- Issues criadas para bugs identificados
+- Issues criadas para bugs identificados (5 issues)
 - Board Kanban no GitHub Projects
 - Documentação inicial dos problemas encontrados
 ### Identificado
@@ -65,3 +89,4 @@ BR/1.0.0/).
 - **Removido** - Funcionalidades removidas
 - **Corrigido** - Correção de bugs
 - **Segurança** - Correções de vulnerabilidades
+- **Melhorado** - Aprimoramentos de qualidade
