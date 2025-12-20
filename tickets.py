@@ -1,4 +1,5 @@
 from datetime import datetime
+from config import USUARIOS, STATUS_VALIDOS
 """
 SigTicket - Sistema de Gestão de Tickets de Suporte
 Versão Legado 0.1 (Contém bugs conhecidos)
@@ -29,7 +30,7 @@ def menu_principal():
 
 def validar_data(data_str):
     """Valida formato DD/MM/AAAA."""
-    data_str = data_str.strip()
+    data_str = data_str.strip() 
 
     if len(data_str) != 10 or data_str[2] != '/' or data_str[5] != '/':
         return False, "Use formato DD/MM/AAAA"
@@ -116,21 +117,33 @@ def listar_tickets():
     print(f"Total: {len(tickets)} ticket(s)")
 
 
-def mudar_status(ticket_id, novo_status):
-    """
-    Altera o status de um ticket
-    BUG #1: Aceita qualquer string como status (sem validação!)
-    """
-    for t in tickets:
-        if t["id"] == ticket_id:
-            # BUG #1: Não valida se o status é válido!
-            # Aceita "xpto", "qualquercoisa", etc.
-            t["status"] = novo_status
-            print(f"\n✓ Status do ticket #{ticket_id} alterado para: {novo_status}")
-            return True
-    
-    print(f"\n✗ Ticket #{ticket_id} não encontrado.")
-    return False
+def mudar_status():    
+    """Altera status com validação.""" 
+    # Agora usa STATUS_VALIDOS do config.py    
+    listar_tickets() 
+    try:        
+        ticket_id = int(input("\nID do ticket: ")) 
+    except ValueError: 
+        print("✗ ID inválido") 
+        return 
+        
+    print("\nStatus válidos:") 
+    for s in STATUS_VALIDOS: 
+        print(f"  - {s}")    
+        
+    novo_status = input("\nNovo status: ").strip().lower() 
+
+    if novo_status not in STATUS_VALIDOS: 
+        print(f"✗ Status inválido! Use: {', '.join(STATUS_VALIDOS)}") 
+        return 
+        
+    for t in tickets: 
+        if t["id"] == ticket_id:            
+            t["status"] = novo_status 
+            print(f"✓ Status alterado para: {novo_status}") 
+            return 
+            
+            print("✗ Ticket não encontrado")
 
 
 def buscar_ticket(ticket_id):
@@ -152,20 +165,17 @@ def buscar_ticket(ticket_id):
     return None
 
 
-def autenticar():
-    """
-    Sistema básico de autenticação
-    PROBLEMA: Senha está hardcoded no início do arquivo!
-    """
-    print("\n--- AUTENTICAÇÃO ---")
-    usuario = input("Usuário: ")
-    senha = input("Senha: ")
+def fazer_login():    
+    """Realiza login do usuário.""" 
+    print("\n=== LOGIN ===")    
+    usuario = input("Usuário: ")    
+    senha = input("Senha: ") 
     
-    if usuario in usuarios_autorizados and senha == SENHA_ADMIN:
-        print(f"\n✓ Bem-vindo, {usuario}!")
-        return True
-    else:
-        print("\n✗ Credenciais inválidas!")
+    if usuario in USUARIOS and USUARIOS[usuario] == senha: 
+        print(f"✓ Login realizado: {usuario}") 
+        return True 
+    else: 
+        print("✗ Usuário ou senha inválidos") 
         return False
 
 
@@ -175,7 +185,7 @@ def main():
     print("\n🎫 Bem-vindo ao SigTicket!")
     
     # Autenticação simples
-    if not autenticar():
+    if not fazer_login():
         print("Acesso negado. Encerrando...")
         return
     
