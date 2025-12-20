@@ -7,6 +7,13 @@ Data: Dezembro/2025
 Descrição:
 Sistema simples para gerenciamento de tickets de suporte.
 Permite criar, listar e alterar status de tickets com validações.
+Autores:
+[Nome Membro 1]
+[Nome Membro 2]
+[Nome Membro 3]
+[Nome Membro 4]
+
+Disciplina: Engenharia de Software II
 """
 
 
