@@ -1,3 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+SigTicket - Sistema de Gerenciamento de Tickets
+Versão: 1.0.0
+Data: Dezembro/2025
+Descrição:
+Sistema simples para gerenciamento de tickets de suporte.
+Permite criar, listar e alterar status de tickets com validações.
+"""
+
+
 from datetime import datetime
 from config import USUARIOS, STATUS_VALIDOS
 
@@ -31,25 +43,55 @@ def menu_principal():
     print("5. Sair")
     print("="*50)
 
+from datetime import datetime
+
 def validar_data(data_str):
-    """Valida formato DD/MM/AAAA."""
+    """
+    Valida se uma string representa uma data válida no formato DD/MM/AAAA.
+
+    Args:
+        data_str (str): String contendo a data a ser validada.
+
+    Returns:
+        tuple: (bool, str) onde:
+            - bool: True se a data for válida, False se inválida
+            - str: Data formatada se válida ou mensagem de erro se inválida
+
+    Examples:
+        >>> validar_data("15/12/2025")
+        (True, "15/12/2025")
+
+        >>> validar_data("32/13/2025")
+        (False, "Data inválida")
+    """
+
+    # Remove espaços em branco no início e no fim da string
     data_str = data_str.strip()
-    
+
+    # Verifica o formato básico: DD/MM/AAAA (10 caracteres com barras)
     if len(data_str) != 10 or data_str[2] != '/' or data_str[5] != '/':
         return False, "Use formato DD/MM/AAAA"
-    
+
     try:
+        # Converte a string para um objeto datetime
         data_obj = datetime.strptime(data_str, "%d/%m/%Y")
+
+        # Regra de negócio: não permitir datas futuras
         
         if data_obj > datetime.now():
             return False, "Data não pode ser futura"
-        
+
+        # Regra de negócio: não permitir anos menores que 2000
         if data_obj.year < 2000:
             return False, "Ano deve ser >= 2000"
-        
+
+        # Se passou por todas as validações, a data é válida
         return True, data_str
+
     except ValueError:
+        # Erro lançado quando a data é inválida (ex: 32/13/2025)
         return False, "Data inválida"
+
 
 
 def criar_ticket():
