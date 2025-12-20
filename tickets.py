@@ -1,3 +1,4 @@
+from datetime import datetime
 """
 SigTicket - Sistema de Gestão de Tickets de Suporte
 Versão Legado 0.1 (Contém bugs conhecidos)
@@ -26,35 +27,76 @@ def menu_principal():
     print("5. Sair")
     print("="*50)
 
+def validar_data(data_str):
+    """Valida formato DD/MM/AAAA."""
+    data_str = data_str.strip()
+
+    if len(data_str) != 10 or data_str[2] != '/' or data_str[5] != '/':
+        return False, "Use formato DD/MM/AAAA"
+
+    try:
+        data_obj = datetime.strptime(data_str, "%d/%m/%Y")
+
+        if data_obj > datetime.now():
+            return False, "Data não pode ser futura"
+
+        if data_obj.year < 2000:
+            return False, "Ano deve ser >= 2000"
+
+        return True, data_str
+
+    except ValueError:
+        return False, "Data inválida"
+
 
 def criar_ticket():
-    """
-    Cria um novo ticket no sistema
-    BUG #2: Não valida o formato da data
-    """
-    global contador_id
-    
-    print("\n--- CRIAR NOVO TICKET ---")
-    titulo = input("Título do problema: ")
-    descricao = input("Descrição detalhada: ")
-    usuario = input("Usuário solicitante: ")
-    data = input("Data (DD/MM/AAAA): ")  # BUG #2: Aceita qualquer coisa!
-    
-    # Cria o ticket sem validações adequadas
-    ticket = {
-        "id": contador_id,
+    """Cria ticket com validação."""
+    print("\n=== CRIAR TICKET ===")
+
+    titulo = input("Título: ").strip()
+    if not titulo:
+        print("✗ Título obrigatório")
+        return
+
+    descricao = input("Descrição: ").strip()
+    if not descricao:
+        print("✗ Descrição obrigatória")
+        return
+
+    usuario = input("Usuário: ").strip()
+    if not usuario:
+        print("✗ Usuário obrigatório")
+        return
+
+    # Validar data (3 tentativas)
+    for tentativa in range(3):
+        data = input("Data (DD/MM/AAAA): ").strip()
+        valida, msg = validar_data(data)
+
+        if valida:
+            data = msg
+            break
+        else:
+            print(f"✗ {msg}")
+            if tentativa < 2:
+                print(f" Tentativas restantes: {2 - tentativa}")
+
+    if not valida:
+        print("✗ Máximo de tentativas. Cancelado.")
+        return
+
+    novo_ticket = {
+        "id": len(tickets) + 1,
         "titulo": titulo,
         "descricao": descricao,
         "usuario": usuario,
         "data": data,
-        "status": "aberto"  # Sempre inicia como aberto
+        "status": "aberto"
     }
-    
-    tickets.append(ticket)
-    contador_id += 1
-    
-    print(f"\n✓ Ticket #{ticket['id']} criado com sucesso!")
-    return ticket
+
+    tickets.append(novo_ticket)
+    print(f"✓ Ticket #{novo_ticket['id']} criado!")
+
 
 
 def listar_tickets():
